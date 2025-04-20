@@ -25,7 +25,11 @@ pipeline {
             steps {
                 script {
                     deployToSSH(
-                        configName: 'LINUX-DOCKER-102'
+                        'LINUX-DOCKER-102',
+                        'cannary', // atau 'full' nanti bisa dibuat parameter pipeline juga
+                        env.APP_NAME,
+                        env.APP_VERSION,
+                        env.PREVIOUS_APP_VERSION
                     )
                 }
             }
@@ -34,7 +38,7 @@ pipeline {
 }
 
 // Fungsi deployToSSH dengan parameter lengkap
-def deployToSSH(configName) {
+def deployToSSH(configName, deploymentMode, appName, appVersion, previousVersion) {
     sshPublisher(
         failOnError: true,
         publishers: [
@@ -42,6 +46,9 @@ def deployToSSH(configName) {
                 configName: configName,
                 transfers: [
                     sshTransfer(
+                        sourceFiles: 'deployment/**',
+                        removePrefix: 'deployment',
+                        remoteDirectory: '/home/deployersakti',
                         execCommand: """
                             cd /home/deployersakti &&
                             cp /home/deployersakti/deployment-app/.env ./deployment/.env &&
