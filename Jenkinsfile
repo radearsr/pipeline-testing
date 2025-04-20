@@ -46,9 +46,6 @@ def deployToSSH(configName, deploymentMode, appName, appVersion, previousVersion
                 configName: configName,
                 transfers: [
                     sshTransfer(
-                        sourceFiles: 'deployment/**',
-                        removePrefix: 'deployment',
-                        remoteDirectory: '/home/deployersakti',
                         execCommand: """
                             cd /home/deployersakti &&
                             cp /home/deployersakti/deployment-app/.env ./deployment/.env &&
