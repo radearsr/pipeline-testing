@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app_instance_1:
+    container_name: app_instance_1
+    image: ${GITLAB_REGISTRY_NAME}
+    restart: always
+    ports:
+      - "3031:3030"
+    environment:
+      - SERVER_PORT=3030
+      - NODE_ENV=production
+    env_file:
+      - .env
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1500M"
+        reservations:
+          cpus: "0.5"
+          memory: "512M"
+
+  app_instance_2:
+    container_name: app_instance_2
+    image: ${GITLAB_REGISTRY_NAME}
+    restart: always
+    ports:
+      - "3032:3030"
+    environment:
+      - SERVER_PORT=3030
+      - NODE_ENV=production
+    env_file:
+      - .env
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "1500M"
+        reservations:
+          cpus: "0.5"
+          memory: "512M"
