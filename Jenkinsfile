@@ -51,6 +51,7 @@ def deployToSSH(configName, deploymentMode, appName, appVersion, previousVersion
                         remoteDirectory: '/home/deployersakti',
                         execCommand: """
                             cd /home/deployersakti &&
+                            ls -al &&
                             cp /home/deployersakti/deployment-app/.env ./deployment/.env &&
                             chmod +x ./deployment/*.sh
                         """
