@@ -1,48 +1,22 @@
 pipeline {
     agent any
 
-    environment {
-        REGISTRY = "registry.gitlab.com/rzktok/api.timsakti.com"
-    }
-
     stages {
-        stage('Login to GitLab Registry') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'gitlab-registry', usernameVariable: 'REGISTRY_USER', passwordVariable: 'REGISTRY_PASS')]) {
-                        sh "echo $REGISTRY_PASS | docker login -u $REGISTRY_USER --password-stdin $REGISTRY"
-                    }
-                }
-            }
-        }
-
         stage('Extract App Info') {
             steps {
                 script {
                     // Ambil versi sekarang dari package.json
-                    def APP_VERSION = sh(script: "grep '\"version\"' package.json | head -1 | cut -d '\"' -f4", returnStdout: true).trim()
-                    env.APP_VERSION = APP_VERSION
+                    env.APP_VERSION = "1.10.0"
 
                     // Ambil versi sebelumnya dari commit sebelumnya
-                    def PREVIOUS_APP_VERSION = sh(script: "git show HEAD^:package.json | grep '\"version\"' | head -1 | cut -d '\"' -f4", returnStdout: true).trim()
-                    env.PREVIOUS_APP_VERSION = PREVIOUS_APP_VERSION
+                    env.PREVIOUS_APP_VERSION = "1.9.0"
 
                     // Ambil nama app dari package.json
-                    def APP_NAME = sh(script: "grep '\"name\"' package.json | head -1 | cut -d '\"' -f4", returnStdout: true).trim()
-                    env.APP_NAME = APP_NAME
+                    env.APP_NAME = "app.testing"
 
                     echo "✅ Current Version: $APP_VERSION"
                     echo "🔙 Previous Version: $PREVIOUS_APP_VERSION"
                     echo "📦 App Name: $APP_NAME"
-                }
-            }
-        }
-
-        stage('Build & Push Docker Image') {
-            steps {
-                script {
-                    sh "docker build --build-arg APP_VERSION=$APP_VERSION -t $REGISTRY:v$APP_VERSION ."
-                    sh "docker push $REGISTRY:v$APP_VERSION"
                 }
             }
         }
