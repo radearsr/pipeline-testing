@@ -52,13 +52,7 @@ def deployToSSH(configName, deploymentMode, appName, appVersion, previousVersion
                         execCommand: """
                             cd /home/deployersakti &&
                             cp /home/deployersakti/deployment-app/.env ./deployment/.env &&
-                            chmod +x ./deployment/*.sh &&
-                            ./deployment/manage-docker-container.sh \\
-                                --mode=${deploymentMode} \\
-                                --app-name=${appName} \\
-                                --app-version=${appVersion} \\
-                                --app-previous-version=${previousVersion} &&
-                            rm -rf ./deployment/*
+                            chmod +x ./deployment/*.sh
                         """
                     )
                 ],
